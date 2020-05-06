@@ -1,8 +1,16 @@
 import express, { Application } from 'express';
-import index from './routes/index';
+import config from './config';
 
-const app: Application = express();
+import routes from './api/routes';
+async function startServer() {
+    const app: Application = express();
+    app.use('/', routes);
 
-app.use('/', index);
+    await require('./loaders').default({ expressApp: app });
 
-app.listen(5000, () => console.log('Server is Running'));
+    app.listen(config.port, () => {
+        console.log(`Server is running in ${config.port} PORT!`);
+    });
+}
+
+startServer();
